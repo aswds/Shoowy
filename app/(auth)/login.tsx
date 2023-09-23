@@ -1,5 +1,5 @@
 import { StyleSheet, KeyboardAvoidingView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "@gluestack-ui/themed";
 import CustomButton from "../../components/Button/CustomButton";
 import BGBox from "../../components/Screen/BGBox";
@@ -10,8 +10,10 @@ import Colors from "../../constants/Colors";
 import AuthForm from "../../components/Auth/AuthForm";
 import { AuthFields } from "../../components/Auth/types";
 import { iconColor, iconSize } from "./constans";
-import { useSignIn } from "@clerk/clerk-expo";
-
+import { useAuth, useSignIn } from "@clerk/clerk-expo";
+import CustomModal from "../../components/Modal/CustomModal";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
+import { initializeError } from "../../utils/initilizeError";
 const Login = () => {
   const loginFields: AuthFields = [
     {
@@ -22,26 +24,70 @@ const Login = () => {
     },
     {
       label: "Password",
-      icon: <AntDesign name="eyeo" size={iconSize} color={iconColor} />,
+      icon: null,
       name: "login_password",
       placeholder: "Enter your password",
     },
   ];
   const [loading, setIsLoading] = React.useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+  const [error, setError] = React.useState("");
+  const { getToken } = useAuth();
+  function showError(err: string) {
+    initializeError(setIsLoading, setIsModalVisible, setError, err);
+  }
+
   const { isLoaded, setActive, signIn } = useSignIn();
-  const onLogin = (formData) => {
-    signIn(formData);
+
+  const onLogin = async (
+    formData: Record<"login_username_email" | "login_password", string>
+  ) => {
+    try {
+      if (formData.login_username_email && formData.login_password) {
+        const completeSignIn = await signIn.create({
+          identifier: formData.login_username_email,
+          password: formData.login_password,
+        });
+        await setActive({ session: completeSignIn.createdSessionId });
+        const auth = getAuth();
+        const token = await getToken({ template: "integration_firebase" });
+        const userCredentials = await signInWithCustomToken(auth, token);
+        /**
+         * The userCredentials.user object will call the methods of
+         * the Firebase platform as an authenticated user.
+         */
+      } else {
+        showError("Please enter all required fields");
+      }
+    } catch (error) {
+      showError(
+        error.errors[0].message === "is unknown"
+          ? "We couldn't find user with that credentials"
+          : error.errors[0].message
+      );
+    }
   };
+
   return (
-    <AuthForm
-      fields={loginFields}
-      onSubmit={() => {}}
-      screenLabel={{
-        label: "Log in",
-        description: "Welcome back!",
-      }}
-      isLoading={loading}
-    />
+    <>
+      <AuthForm
+        fields={loginFields}
+        onSubmit={onLogin}
+        screenLabel={{
+          label: "Log in",
+          description: "Welcome back!",
+        }}
+        isLoading={loading}
+      />
+      <CustomModal
+        onSubmit={() => {
+          setIsModalVisible(false);
+        }}
+        text={error}
+        title={"Error"}
+        visible={isModalVisible}
+      />
+    </>
   );
 };
 

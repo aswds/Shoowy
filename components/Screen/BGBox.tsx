@@ -1,25 +1,56 @@
-import { ScrollView, StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import React from "react";
 import { Box } from "@gluestack-ui/themed";
 import Colors from "../../constants/Colors";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { isAndroid } from "../../utils/platformUtils";
 
 const BGBox = (
-  props: Omit<React.ComponentProps<typeof Box>, "backgroundColor">
+  props: React.ComponentProps<typeof Box> & {
+    isKeyboardAvoidingViewDisabled?: boolean;
+  }
 ) => {
+  const insets = useSafeAreaInsets();
   return (
-    <ScrollView
-      style={{
-        backgroundColor: Colors.light.background,
-        flex: 1,
-      }}
-      contentContainerStyle={{
-        flexGrow: 1,
-      }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={
+        props.isKeyboardAvoidingViewDisabled
+          ? null
+          : isAndroid()
+          ? "height"
+          : "padding"
+      }
     >
-      <Box backgroundColor={Colors.light.background} {...props} height={"100%"}>
-        {props.children}
-      </Box>
-    </ScrollView>
+      <ScrollView
+        style={{
+          backgroundColor: props.backgroundColor ?? Colors.background,
+          flex: 1,
+        }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          backgroundColor: props.backgroundColor ?? Colors.background,
+          paddingHorizontal: 20,
+          paddingTop: insets.top,
+        }}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <Box backgroundColor={Colors.background} {...props} height={"100%"}>
+          {props.children}
+        </Box>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

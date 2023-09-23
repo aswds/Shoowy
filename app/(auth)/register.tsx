@@ -1,32 +1,14 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import {
-  Box,
-  Button,
-  ButtonText,
-  CloseIcon,
-  Heading,
-  Icon,
-  Modal,
-  ModalBackdrop,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Pressable,
-} from "@gluestack-ui/themed";
-import Title from "../../components/Title/Title";
-import BGBox from "../../components/Screen/BGBox";
-import CustomInput from "../../components/Input/Input";
-import CustomButton from "../../components/Button/CustomButton";
+import { useSignUp } from "@clerk/clerk-expo";
 import { AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
-import Colors from "../../constants/Colors";
+import React from "react";
+import { StyleSheet } from "react-native";
 import AuthForm from "../../components/Auth/AuthForm";
 import { AuthFields } from "../../components/Auth/types";
-import { iconSize, iconColor } from "./constans";
-import { useSignUp } from "@clerk/clerk-expo";
 import CustomModal from "../../components/Modal/CustomModal";
+import Colors from "../../constants/Colors";
+import Verification from "../../screens/VerificationScreen";
+import { initializeError } from "../../utils/initilizeError";
+import { iconColor, iconSize } from "./constans";
 
 type fieldsName = "register_username" | "register_email" | "register_password";
 
@@ -40,15 +22,13 @@ const RegisterPage = () => {
     },
     {
       label: "Email Address",
-      icon: (
-        <Feather name="mail" size={24} color={Colors.light.secondaryText} />
-      ),
+      icon: <Feather name="mail" size={24} color={Colors.secondaryText} />,
       name: "register_email",
       placeholder: "Enter your email address",
     },
     {
       label: "Password",
-      icon: <AntDesign name="eyeo" size={iconSize} color={iconColor} />,
+      icon: null,
       name: "register_password",
       placeholder: "Enter your password",
     },
@@ -56,45 +36,105 @@ const RegisterPage = () => {
   const [loading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState("");
   const { isLoaded, setActive, signUp } = useSignUp();
+  const [pendingVerification, setPendingVerification] = React.useState(false);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+
+  function showError(err: string) {
+    initializeError(setIsLoading, setIsModalVisible, setError, err);
+  }
+
   const onSignUp = async (formData: Record<fieldsName, string>) => {
+    // Check if the component is loaded
+    if (!isLoaded) {
+      return;
+    }
+
+    // Start loading state
+    setIsLoading(true);
+
+    try {
+      // Check if all required form fields are filled
+      if (
+        formData.register_email &&
+        formData.register_password &&
+        formData.register_username
+      ) {
+        // Create a new user account
+        await signUp.create({
+          emailAddress: formData.register_email,
+          password: formData.register_password,
+          username: formData.register_username,
+        });
+
+        // Prepare for email address verification
+        await signUp.prepareEmailAddressVerification({
+          strategy: "email_code",
+        });
+
+        // Set pending verification flag
+        setPendingVerification(true);
+        setIsLoading(false);
+      } else {
+        // Handle case where not all required fields are filled
+        showError("Please enter all required fields");
+      }
+    } catch (error) {
+      // Handle errors
+      showError(
+        error.errors[0].message === "is invalid"
+          ? "Invalid Email Address"
+          : error.errors[0].message
+      );
+    }
+  };
+  const onPressVerify = async (code: string) => {
     if (!isLoaded) {
       return;
     }
     setIsLoading(true);
 
     try {
-      await signUp.create({
-        emailAddress: formData.register_email,
-        password: formData.register_password,
-        username: formData.register_username,
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
       });
-    } catch (error) {
+
+      await setActive({ session: completeSignUp.createdSessionId });
+    } catch (error: any) {
+      showError(
+        error.errors[0].message === "expired"
+          ? "Code is expired"
+          : error.errors[0].message
+      );
+    } finally {
       setIsLoading(false);
-      setError(error.errors[0].message);
-      setIsModalVisible(true);
     }
   };
   return (
     <>
-      <AuthForm
-        fields={registerFields}
-        onSubmit={onSignUp}
-        screenLabel={{ label: "Sign up", description: "Join us!" }}
-        isLoading={loading}
-        error={error}
-      />
-      {isModalVisible && (
-        <CustomModal
-          onClose={() => {
-            setIsModalVisible(false);
-          }}
-          onSubmit={() => {}}
-          text={error}
-          title={"Error"}
-          visible={isModalVisible}
+      {!pendingVerification ? (
+        <AuthForm
+          fields={registerFields}
+          onSubmit={onSignUp}
+          screenLabel={{ label: "Sign up", description: "Join us!" }}
+          isLoading={loading}
+          showLogo={true}
+        />
+      ) : (
+        <Verification
+          loading={loading}
+          onVerify={onPressVerify}
+          title="Verify Email"
+          isEmailVerification
         />
       )}
+      <CustomModal
+        onSubmit={() => {
+          setIsModalVisible(false);
+        }}
+        text={error}
+        title={"Error"}
+        visible={isModalVisible}
+      />
     </>
   );
 };

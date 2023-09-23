@@ -9,13 +9,12 @@ const PublicLayout = () => {
       screenOptions={{
         headerShown: true,
         headerTransparent: true,
-        headerTintColor: Colors.light.accentColor,
+        headerTintColor: Colors.accentColor,
         headerBackTitleStyle: {
           fontFamily: "Bold",
         },
         contentStyle: {
-          paddingHorizontal: 20,
-          backgroundColor: Colors.light.background,
+          backgroundColor: Colors.background,
         },
         headerTitle: "",
       }}

@@ -16,10 +16,10 @@ const InitialScreen = () => {
       justifyContent="space-around"
     >
       <Box alignItems="flex-start" width={"100%"}>
-        <Text fontFamily="Bold" size="5xl" color={Colors.light.accentColor}>
+        <Text fontFamily="Bold" size="5xl" color={Colors.accentColor}>
           Welcome to Shoowy 👋
         </Text>
-        <Text color={Colors.light.secondaryText} mt={5} fontFamily="Medium">
+        <Text color={Colors.secondaryText} mt={5} fontFamily="Medium">
           make your shower routine simpler
         </Text>
       </Box>
@@ -34,10 +34,10 @@ const InitialScreen = () => {
             router.push("/login");
           }}
         />
-        <Text color={Colors.light.secondaryText} mt={10} fontFamily="Regular">
+        <Text color={Colors.secondaryText} mt={10} fontFamily="Regular">
           New to Shoowy?{" "}
           <Link href={"/register"}>
-            <Text color={Colors.light.accentColor} fontFamily={"Medium"}>
+            <Text color={Colors.accentColor} fontFamily={"Medium"}>
               Sign up
             </Text>
           </Link>

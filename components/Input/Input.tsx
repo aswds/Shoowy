@@ -6,7 +6,7 @@ import { Box } from "@gluestack-ui/themed";
 import Colors from "../../constants/Colors";
 interface CustomInputProps extends ComponentProps<typeof TextInput> {
   placeholder: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   label: string;
   underInput?: React.ReactNode;
 }
@@ -22,8 +22,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
     <Box
       alignItems="flex-start"
       justifyContent="center"
-      borderColor={Colors.light.secondaryText}
-      height={50}
+      borderColor={Colors.secondaryText}
       style={styles.outerContainer}
     >
       <Text style={styles.label}>{label}</Text>
@@ -43,16 +42,14 @@ const CustomInput: React.FC<CustomInputProps> = ({
 };
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    marginTop: 10,
-  },
+  outerContainer: {},
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#B8B8B8",
     borderRadius: 15,
-    height: "100%",
+    height: 50,
     backgroundColor: "white",
   },
   iconContainer: {

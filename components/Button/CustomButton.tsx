@@ -1,28 +1,42 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { ButtonText, Button } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import Colors from "../../constants/Colors";
+import CText from "../Text/Text";
 
-interface CBProps {
+interface CBProps extends React.ComponentProps<typeof TouchableOpacity> {
   label: string;
+  textColor?: string;
   onPress: () => void;
+  backgroundColor?: string;
 }
 
-const CustomButton = ({ label, onPress }: CBProps) => {
+const CustomButton = ({
+  label,
+  onPress,
+  textColor,
+  backgroundColor,
+  ...props
+}: CBProps) => {
   return (
-    <Button
-      size="lg"
-      width={"100%"}
-      backgroundColor={Colors.light.accentColor}
-      height={60}
-      borderRadius={20}
+    <TouchableOpacity
       onPress={onPress}
+      style={{
+        width: "100%",
+        backgroundColor: backgroundColor ?? Colors.accentColor,
+        height: 60,
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      activeOpacity={0.7}
+      {...props}
     >
-      <ButtonText color={Colors.light.background} fontFamily="Bold">
+      <CText color={textColor ?? Colors.background} fontFamily="B" size="lg">
         {label}
-      </ButtonText>
-    </Button>
+      </CText>
+    </TouchableOpacity>
   );
 };
 

@@ -1,10 +1,9 @@
-import { Stack } from "expo-router";
-import { ClerkProvider } from "@clerk/clerk-expo";
-import { SafeAreaView, View, Text } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import Colors from "../constants/Colors";
 const RootIndex = () => {
   return (
-    <View>
-      <Text>Hello world</Text>
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <ActivityIndicator size="large" color={Colors.accentColor} />
     </View>
   );
 };

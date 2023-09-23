@@ -6,6 +6,7 @@ import Colors from "../../constants/Colors";
 
 interface TitleProps extends React.PropsWithChildren {
   description?: string;
+  showLogo: boolean;
 }
 
 const Title = (props: TitleProps) => {
@@ -17,26 +18,28 @@ const Title = (props: TitleProps) => {
         width={"100%"}
         flexDirection="row"
       >
-        <Text fontFamily="Bold" size="5xl" color={Colors.light.accentColor}>
+        <Text fontFamily="Bold" size="4xl" color={Colors.accentColor}>
           {props.children}
         </Text>
-        <Box
-          height={60}
-          aspectRatio={1}
-          justifyContent="center"
-          alignContent="center"
-          ml={20}
-        >
-          <Image
-            source={images.logo}
-            resizeMode="contain"
-            style={styles.image}
-          />
-        </Box>
+        {props.showLogo ? (
+          <Box
+            height={60}
+            aspectRatio={1}
+            justifyContent="center"
+            alignContent="center"
+            ml={20}
+          >
+            <Image
+              source={images.logo}
+              resizeMode="contain"
+              style={styles.image}
+            />
+          </Box>
+        ) : null}
       </Box>
       <Text
         fontFamily="Bold"
-        color={Colors.light.secondaryText}
+        color={Colors.secondaryText}
         alignSelf="flex-start"
       >
         {props.description}
