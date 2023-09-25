@@ -32,7 +32,12 @@ const UserCalendar = ({ history }: { history: any[] }) => {
           selectedDayBackgroundColor: "#00adf5",
           todayTextColor: Colors.cold,
         }}
-        style={{ borderRadius: 20, padding: 10, justifyContent: "center" }}
+        style={{
+          borderRadius: 20,
+          padding: 10,
+          marginVertical: 20,
+          justifyContent: "center",
+        }}
       />
     </View>
   );

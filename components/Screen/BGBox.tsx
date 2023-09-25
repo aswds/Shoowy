@@ -42,6 +42,7 @@ const BGBox = (
           backgroundColor: props.backgroundColor ?? Colors.background,
           paddingHorizontal: 20,
           paddingTop: insets.top,
+          paddingBottom: isAndroid() ? 20 : 0,
         }}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

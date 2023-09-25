@@ -15,12 +15,7 @@ const ShowerLayout = () => {
         headerTintColor: Colors.accentColor,
       }}
     >
-      <Stack.Screen
-        name="presets"
-        options={{
-          headerLeft: () => <BackButton />,
-        }}
-      />
+      <Stack.Screen name="presets" options={{}} />
       <Stack.Screen
         name="shower"
         options={{

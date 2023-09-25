@@ -6,7 +6,7 @@ import {
 import { Tabs } from "expo-router";
 import React from "react";
 import Colors from "../../constants/Colors";
-
+import { Stack } from "expo-router";
 const TabsLayout = () => {
   const iconSize = 30;
   return (

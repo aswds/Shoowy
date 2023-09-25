@@ -27,7 +27,9 @@ const Stopwatch = ({
   updateShowerType,
   onAddHistory,
 }: StopwatchProps) => {
-  const [isColdShower, setIsColdShower] = useState(false);
+  const [isColdShower, setIsColdShower] = useState(
+    showerType === "Cold" ? true : false
+  );
   const [generalTime, setGeneralTime] = useState(generalShowerTime);
   const [coldShowerRemaining, setColdShowerRemaining] = useState(coldTime);
   const [warmShowerRemaining, setWarmShowerRemaining] = useState(warmTime);
@@ -77,16 +79,19 @@ const Stopwatch = ({
   const stopTimer = () => {
     setIsPaused(true);
   };
-  useInterval(updateTimers, isPaused ? null : 1000);
+  useInterval(updateTimers, isPaused || generalTime <= 0 ? null : 1000);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
-  if (generalTime >= 0) {
+  if (generalTime <= 0) {
     return (
-      <TimeEnded time={formatTime(generalTime)} onAddHistory={onAddHistory} />
+      <TimeEnded
+        time={formatTime(generalShowerTime)}
+        onAddHistory={onAddHistory}
+      />
     );
   }
   const iconSize = 180;

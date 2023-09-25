@@ -3,13 +3,15 @@ const tintColorDark = "#fff";
 
 export default {
   accentColor: "#8AA2F6",
-  text: "#FFFFFF",
-  secondaryText: "#c3c3c3",
-  background: "#1E1E1E",
+  text: "#626262",
+  secondaryText: "#AAA",
+  background: "#F5F5F5",
   tint: tintColorLight,
   tabIconDefault: "#B8B8B8",
   tabIconSelected: tintColorLight,
-  card: "#252525",
+  card: "white",
+
+  input: "white",
   hot: "#FD6A6A",
   cold: "#5594F4",
   timerColdColors: ["#5594F4", "#669ef5", "#76a9f6", "#88b4f7", "#99bef8"],

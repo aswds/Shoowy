@@ -37,21 +37,23 @@ const Login = () => {
     initializeError(setIsLoading, setIsModalVisible, setError, err);
   }
 
-  const { isLoaded, setActive, signIn } = useSignIn();
+  const { isLoaded, signIn, setActive } = useSignIn();
 
   const onLogin = async (
     formData: Record<"login_username_email" | "login_password", string>
   ) => {
+    setIsLoading(true);
     try {
       if (formData.login_username_email && formData.login_password) {
-        const completeSignIn = await signIn.create({
+        const completeSignIn = await signIn!.create({
           identifier: formData.login_username_email,
           password: formData.login_password,
         });
         await setActive({ session: completeSignIn.createdSessionId });
-        const auth = getAuth();
-        const token = await getToken({ template: "integration_firebase" });
-        const userCredentials = await signInWithCustomToken(auth, token);
+        // const auth = getAuth();
+        // const token = await getToken({ template: "integration_firebase" });
+        // const userCredentials = await signInWithCustomToken(auth, token);
+
         /**
          * The userCredentials.user object will call the methods of
          * the Firebase platform as an authenticated user.
@@ -65,6 +67,8 @@ const Login = () => {
           ? "We couldn't find user with that credentials"
           : error.errors[0].message
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,7 +81,7 @@ const Login = () => {
           label: "Log in",
           description: "Welcome back!",
         }}
-        isLoading={loading}
+        isLoading={loading || !isLoaded}
       />
       <CustomModal
         onSubmit={() => {

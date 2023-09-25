@@ -14,7 +14,7 @@ const Shower = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [showerType, setShowerType] = useState<WarmColdShower>("Warm");
+  const [showerType, setShowerType] = useState<WarmColdShower>(params?.type);
   function updateShowerType(showerType: WarmColdShower) {
     setShowerType(showerType);
   }
@@ -41,6 +41,7 @@ const Shower = () => {
       <Stopwatch
         coldTime={params?.cold_time}
         warmTime={params?.warm_time}
+        showerType={showerType}
         generalShowerTime={params?.general_time}
         updateShowerType={updateShowerType}
         onAddHistory={() => {

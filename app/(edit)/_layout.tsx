@@ -28,62 +28,15 @@ const EditLayout = () => {
           headerShown: true,
 
           presentation: "fullScreenModal",
-          headerLeft: (props) => {
-            return (
-              <Text
-                fontFamily="Regular"
-                alignSelf="flex-start"
-                color={Colors.hot}
-                onPress={() => {
-                  router.back();
-                }}
-              >
-                Cancel
-              </Text>
-            );
-          },
         }}
       />
       <Stack.Screen
         name="edit_email"
         options={{
           headerTitle: "",
-
-          headerLeft: (props) => {
-            return (
-              <Text
-                fontFamily="Regular"
-                alignSelf="flex-start"
-                color={Colors.hot}
-                onPress={() => {
-                  router.back();
-                }}
-              >
-                Cancel
-              </Text>
-            );
-          },
         }}
       />
-      <Stack.Screen
-        name="edit_password"
-        options={{
-          headerLeft: (props) => {
-            return (
-              <Text
-                fontFamily="Regular"
-                alignSelf="flex-start"
-                color={Colors.hot}
-                onPress={() => {
-                  router.back();
-                }}
-              >
-                Cancel
-              </Text>
-            );
-          },
-        }}
-      />
+      <Stack.Screen name="edit_password" />
       {/* <Stack.Screen name="shower" /> */}
     </Stack>
   );

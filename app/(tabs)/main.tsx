@@ -1,8 +1,8 @@
 import { Feather } from "@expo/vector-icons";
 import { Box, Text } from "@gluestack-ui/themed";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { onSnapshot } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
 import { deletePresetsFromUser } from "../../api/db/presets/onDelete";
@@ -32,6 +32,7 @@ const MainPage = () => {
   // useEffect(() => {
   //   fetch_user();
   // }, []);
+
   useEventSubscription(() => onSnapshot(userRef(), fetch_user), []);
   useEventSubscription(() => onSnapshot(presetsReference(), fetch_user), []);
   return (
@@ -97,7 +98,7 @@ const MainPage = () => {
                 <Feather name="plus" size={20} color={Colors.accentColor} />
               }
               onPress={() => {
-                router.push("/(shower)/presets");
+                router.push("/presets");
               }}
             />
           </Box>

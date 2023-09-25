@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     borderColor: "#B8B8B8",
     borderRadius: 15,
     height: 50,
-    backgroundColor: "white",
+    backgroundColor: Colors.input,
   },
   iconContainer: {
     marginHorizontal: 10,

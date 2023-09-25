@@ -55,7 +55,6 @@ const PasswordResetScreen = () => {
         password,
       });
       // Set the user session active, which will log in the user automatically
-      await setActive({ session: result.createdSessionId });
     } catch (err: any) {
       showError(err.errors[0].message);
     } finally {

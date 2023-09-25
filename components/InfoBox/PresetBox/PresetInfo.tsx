@@ -18,7 +18,7 @@ interface PresetInfoProps {
 
 const PresetInfo: React.FC<PresetInfoProps> = ({ name, time, type }) => {
   return (
-    <>
+    <Box>
       <Box
         flexDirection="row"
         justifyContent="space-between"
@@ -39,21 +39,23 @@ const PresetInfo: React.FC<PresetInfoProps> = ({ name, time, type }) => {
           <SnowIcon size={20} />
         )}
       </Box>
-      {type === "Contrast" && !_.isEmpty(time) && (
-        <ContrastTime coldTime={time.cold_time} warmTime={time.warm_time} />
-      )}
-      <CText
-        fontFamily="M"
-        size="sm"
-        style={{ alignItems: "center", justifyContent: "center" }}
-      >
-        Time{" "}
-        <CText fontFamily={"M"}>
-          <Ionicons name="time-outline" size={18} color={Colors.text} />:{" "}
+      <Box gap={5}>
+        {type === "Contrast" && !_.isEmpty(time) && (
+          <ContrastTime coldTime={time.cold_time} warmTime={time.warm_time} />
+        )}
+        <CText
+          fontFamily="M"
+          size="sm"
+          style={{ alignItems: "center", justifyContent: "center" }}
+        >
+          Time{" "}
+          <CText fontFamily={"M"}>
+            <Ionicons name="time-outline" size={18} color={Colors.text} />:{" "}
+          </CText>
+          {!_.isEmpty(time) && calcTimeToString(time?.general_time)}
         </CText>
-        {!_.isEmpty(time) && calcTimeToString(time?.general_time)}
-      </CText>
-    </>
+      </Box>
+    </Box>
   );
 };
 

@@ -1,7 +1,8 @@
 # TODOs
 
     - [x] Create edit page for username and image
-    - [ ] Implement history of showering
-    - [ ] Add marked days to calendar
-    - [ ] Add best result in profile page
-    - [ ] Add the ability to edit username
+    - [x] Implement history of showering
+    - [x] Add marked days to calendar
+    - [x] Add best result in profile page
+    - [x] Add the ability to edit username
+    - [x] Add the ability to edit user image

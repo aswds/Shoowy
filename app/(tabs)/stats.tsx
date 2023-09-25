@@ -44,12 +44,9 @@ const StatsPage = () => {
         renderItem={({ item, index }) => {
           const { cold_time, type, name, warm_time, general_time } =
             item.preset;
+          const date = item.timestamp?.toDate();
           return (
-            <WideBar
-              barTitle={moment(item.timestamp?.toDate().toString()).format(
-                "lll"
-              )}
-            >
+            <WideBar barTitle={moment(date).format("lll")}>
               <PresetInfo
                 {...item.preset}
                 time={{ cold_time, general_time, warm_time }}

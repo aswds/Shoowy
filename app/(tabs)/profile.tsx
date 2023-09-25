@@ -22,6 +22,7 @@ import CText from "../../components/Text/Text";
 import Colors from "../../constants/Colors";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { calcTimeToString } from "../../utils/formatSeconds";
+import UserImage from "../../components/User/Image";
 export default function Profile() {
   const { isLoaded, user } = useUser();
   const { signOut } = useClerk();
@@ -38,8 +39,8 @@ export default function Profile() {
     contrast: null,
   });
   function setMaxGeneralTime() {
-    let maxColdGeneralTime = -Infinity;
-    let maxContrastGeneralTime = -Infinity;
+    let maxColdGeneralTime = 0;
+    let maxContrastGeneralTime = 0;
     for (const item of history) {
       if (item.preset.type === "Cold") {
         // Update maxColdGeneralTime for 'cold' type
@@ -60,7 +61,7 @@ export default function Profile() {
   }
   // Iterate through the array
   useEffect(() => {
-    setMaxTime(setMaxGeneralTime());
+    setMaxTime(setMaxGeneralTime);
   }, []);
 
   return (
@@ -74,13 +75,8 @@ export default function Profile() {
                 setShowLogoutModal(true);
               }}
             />
-            <Avatar h={100} aspectRatio={1} borderRadius={60}>
-              <AvatarImage
-                source={{ uri: user?.imageUrl }}
-                onLoadEnd={() => {}}
-              />
-              <AvatarFallbackText>{user?.imageUrl}</AvatarFallbackText>
-            </Avatar>
+            <UserImage />
+
             <CText fontFamily="M" size="lg" color={Colors.accentColor}>
               {user?.username}
             </CText>

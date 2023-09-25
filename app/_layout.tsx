@@ -8,14 +8,39 @@ import React, { useEffect } from "react";
 import { extendedConfig } from "../extendedConfig";
 import { useLoadFonts } from "../hooks/useLoadFonts";
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebase";
+import { auth, firebaseConfig } from "./firebase";
 import Colors from "../constants/Colors";
 import { StatusBar } from "expo-status-bar";
 import { Provider } from "react-redux";
 import { store } from "../redux/store";
 import { SafeAreaView } from "react-native";
+import { onAuthStateChanged } from "firebase/auth";
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
+const InitialLayout = () => {
+  const { isLoaded, isSignedIn } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+  const { error, isLoaded: isFontLoaded } = useLoadFonts();
+  useEffect(() => {
+    function initializeScreen() {
+      if (!isLoaded || !isFontLoaded) return;
+      const isTabsGroup = segments[0] === "(tabs)";
+      if (!isSignedIn) {
+        console.log("not signed");
+        router.replace("/initial_screen");
+      } else if (isSignedIn && !isTabsGroup) {
+        console.log("signed");
+
+        router.replace("/(tabs)/main");
+      }
+    }
+    initializeScreen();
+  }, [isSignedIn]);
+
+  if (!isFontLoaded) return;
+  return <Stack screenOptions={{ headerShown: false }} />;
+};
 const tokenCache: TokenCache = {
   async getToken(key: string) {
     try {
@@ -32,41 +57,6 @@ const tokenCache: TokenCache = {
     }
   },
 };
-const InitialLayout = () => {
-  const { isLoaded, isSignedIn } = useAuth();
-  const segments = useSegments();
-  const router = useRouter();
-  const { error, isLoaded: isFontLoaded } = useLoadFonts();
-  useEffect(() => {
-    async function initializeScreen() {
-      if (!isLoaded || !isFontLoaded) return;
-      const isTabsGroup = segments[0] === "(tabs)";
-      if (!isSignedIn) {
-        router.replace("/initial_screen");
-      } else if (isSignedIn && !isTabsGroup) {
-        router.replace("/(tabs)/main");
-      }
-    }
-
-    initializeScreen();
-  }, [isSignedIn]);
-
-  return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          // paddingHorizontal: 20,
-          backgroundColor: Colors.background,
-        },
-      }}
-    >
-      <Stack.Screen name="(shower)" options={{ gestureEnabled: false }} />
-      <Stack.Screen name="index" />
-    </Stack>
-  );
-};
-
 const RootLayoutNav = () => {
   return (
     <ClerkProvider

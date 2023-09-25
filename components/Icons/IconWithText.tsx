@@ -4,6 +4,7 @@ import SnowIcon from "./SnowIcon"; // Import your SnowIcon component here
 import WarmIcon from "./WarmIcon";
 import CText from "../Text/Text";
 import { ShowerType } from "../../types/Types";
+import { Box } from "@gluestack-ui/themed";
 
 interface IconWithTextProps extends Required<React.PropsWithChildren> {
   type: ShowerType;
@@ -34,9 +35,11 @@ const IconWithText = ({ type, children }: IconWithTextProps) => {
         alignItems: "flex-start",
       }}
     >
-      <CText fontFamily={"B"}>
-        {type} {content}
-      </CText>
+      <Box flexDirection="row" gap={5}>
+        <CText fontFamily={"B"}>{type}</CText>
+        {content}
+      </Box>
+
       {children}
     </View>
   );

@@ -17,7 +17,7 @@ const CText: React.FC<CTextProps> = ({ fontFamily, ...props }) => {
     <Text
       {...props}
       fontFamily={fontMapping[fontFamily]}
-      color={Colors.secondaryText}
+      color={props.color ?? Colors.text}
     >
       {props.children}
     </Text>

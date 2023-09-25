@@ -1,23 +1,26 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
-import BGBox from "../../components/Screen/BGBox";
-import Title from "../../components/Title/Title";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
-import CustomInput from "../../components/Input/Input";
-import { AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
-import { iconColor, iconSize } from "../(auth)/constans";
 import { useUser } from "@clerk/clerk-expo";
-import Spinner from "react-native-loading-spinner-overlay";
-import { Center, Pressable, Image, Box } from "@gluestack-ui/themed";
-import CText from "../../components/Text/Text";
-import Colors from "../../constants/Colors";
+import { AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
+import {
+  Avatar,
+  AvatarFallbackText,
+  Box,
+  Center,
+  Image,
+} from "@gluestack-ui/themed";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useRouter } from "expo-router";
-import EditSensitiveInfo from "../../components/Edit/EditSensitiveInfo";
+import React, { useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import Spinner from "react-native-loading-spinner-overlay";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { iconColor, iconSize } from "../(auth)/constans";
+import CustomInput from "../../components/Input/Input";
+import BGBox from "../../components/Screen/BGBox";
+import CText from "../../components/Text/Text";
+import Colors from "../../constants/Colors";
 import { formatEmail } from "../../utils/formatEmail";
+import * as FileSystem from "expo-file-system";
+import UserImage from "../../components/User/Image";
 const Edit = () => {
   const { isLoaded, user } = useUser();
   const [username, setUsername] = useState<string>(null);
@@ -27,14 +30,26 @@ const Edit = () => {
   const [image, setImage] = useState(null);
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  async function uploadImage() {
-    if (image) {
-      const imageBlob = await fetch(image).then((image) => image.blob());
-      await user?.setProfileImage({
-        file: imageBlob,
-      });
+
+  const uploadImage = async () => {
+    try {
+      // const response = await axios.post(
+      //   `https://polished-chipmunk-36.clerk.accounts.dev/v1/user_2V7UwiFHzmGebN4x5MaSWrT1ZUH/profile_image`,
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+      await user?.setProfileImage({ file: image.base64 });
+      // Handle the response from the server
+    } catch (error) {
+      // Handle any errors that occur during the upload
+      console.error("Error uploading image", error.errors);
     }
-  }
+  };
+
   function updateUsername() {
     if (username)
       user?.update({
@@ -48,10 +63,20 @@ const Edit = () => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
+
+      // formData.append(
+      //   "file",
+      //   JSON.stringify({
+      //     uri: result.assets[0].uri,
+      //     type: result.assets[0].type, // Adjust the type as needed
+      //     name: result.assets[0].fileName,
+      //   })
+      // );
     }
   };
 
@@ -72,8 +97,8 @@ const Edit = () => {
               <TouchableOpacity
                 onPress={async () => {
                   updateUsername();
-                  await uploadImage();
-                  router.back();
+                  if (image) await uploadImage();
+                  // router.back();
                 }}
               >
                 <CText fontFamily="M" color={Colors.accentColor}>
@@ -87,21 +112,15 @@ const Edit = () => {
       <Box width={"100%"} height={"20%"} mt={"5%"}>
         <Center>
           <Box shadowOpacity={0.3} shadowOffset={{ height: 2, width: 0 }}>
-            <Image
-              source={{ uri: image ?? user?.imageUrl }}
-              height={100}
-              aspectRatio={1}
-              borderRadius={999}
-              overflow="hidden"
-            />
+            <UserImage />
           </Box>
 
-          <TouchableOpacity onPress={pickImage}>
+          {/* <TouchableOpacity onPress={pickImage}>
             <CText fontFamily={"M"} size="sm" color={Colors.accentColor}>
               Update picture
               <Feather name="edit-2" size={13} color={Colors.accentColor} />
             </CText>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </Center>
       </Box>
       <CustomInput
@@ -120,7 +139,6 @@ const Edit = () => {
           <Feather name="mail" size={iconSize} color={Colors.secondaryText} />
         }
         value={formatEmail(email)}
-        editable={false}
         onTouchStart={() => {
           router.push("/(edit)/edit_email");
         }}
@@ -133,7 +151,6 @@ const Edit = () => {
           <AntDesign name="eyeo" size={iconSize} color={Colors.secondaryText} />
         }
         value={"********"}
-        editable={false}
         onTouchStart={() => {
           router.push("/(edit)/edit_password");
         }}
