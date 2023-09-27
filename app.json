@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.SyntrixApps.Shoowy"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +34,15 @@
     "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "596ec3f3-4219-4b44-80d3-09551e26b748"
+      }
+    },
+    "owner": "bendzeit"
   }
 }

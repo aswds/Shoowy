@@ -40,6 +40,7 @@ const Stopwatch = ({
     playSound();
     setIsColdShower(isColdShower);
     updateShowerType(isColdShower ? "Cold" : "Warm");
+    setGeneralTime((prev) => prev + 1);
   }
 
   const updateTimers = () => {
@@ -48,13 +49,9 @@ const Stopwatch = ({
         setColdShowerRemaining((prev) => prev - 1);
       } else {
         // Cold shower time is over, switch to warm shower
-
         updateShowerTypeHandle(false);
-        if (warmShowerRemaining > 0) {
-          setWarmShowerRemaining((prev) => prev - 1);
-        } else {
-          setWarmShowerRemaining(warmTime);
-        }
+
+        setWarmShowerRemaining(warmTime);
       }
     } else {
       if (warmShowerRemaining > 0) {
@@ -62,12 +59,7 @@ const Stopwatch = ({
       } else {
         // Warm shower time is over, switch to cold shower
         updateShowerTypeHandle(true);
-
-        if (coldShowerRemaining > 0) {
-          setColdShowerRemaining((prev) => prev - 1);
-        } else {
-          setColdShowerRemaining(coldTime);
-        }
+        setColdShowerRemaining(coldTime);
       }
     }
     setGeneralTime((prev) => prev - 1);
