@@ -14,14 +14,12 @@ const UserCalendar = ({ history }: { history: any[] }) => {
     return acc;
   }, {});
 
-  console.log(selected);
   return (
     <View style={{}}>
       <Calendar
         markedDates={{
           ...selected,
         }}
-        onDayPress={(day) => console.log(day.dateString)}
         theme={{
           backgroundColor: Colors.card,
           textDayHeaderFontFamily: "Medium",

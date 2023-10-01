@@ -3,7 +3,7 @@ import { Box, Text } from "@gluestack-ui/themed";
 import { Stack, useRouter } from "expo-router";
 import { onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView } from "react-native";
+import { ActivityIndicator, FlatList, SafeAreaView } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
 import { deletePresetsFromUser } from "../../api/db/presets/onDelete";
 import SmallIconButton from "../../components/Button/SmallIconButton";
@@ -37,7 +37,6 @@ const MainPage = () => {
   useEventSubscription(() => onSnapshot(presetsReference(), fetch_user), []);
   return (
     <BGBox>
-      <Spinner visible={isLoading} />
       <SafeAreaView
         style={{
           flex: 1,
@@ -140,16 +139,25 @@ const MainPage = () => {
               flexGrow: 1,
             }}
             ListEmptyComponent={
-              <EmptyList
-                text="Add some presets to get started!"
-                icon={
-                  <Feather
-                    name="droplet"
-                    size={24}
-                    color={Colors.secondaryText}
+              isLoading ? (
+                <Box style={{ flex: 1 }}>
+                  <ActivityIndicator
+                    size={"small"}
+                    color={Colors.accentColor}
                   />
-                }
-              />
+                </Box>
+              ) : (
+                <EmptyList
+                  text="Add some presets to get started!"
+                  icon={
+                    <Feather
+                      name="droplet"
+                      size={24}
+                      color={Colors.secondaryText}
+                    />
+                  }
+                />
+              )
             }
           />
         </Box>

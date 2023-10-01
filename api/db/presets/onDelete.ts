@@ -11,7 +11,6 @@ export async function deletePresetsFromUser(
 
   // Reference to the presets subcollection
   try {
-    console.log(presetIdsToDelete);
     if (typeof presetIdsToDelete === "string") {
       const presetsCollectionRef = doc(
         userRef(),

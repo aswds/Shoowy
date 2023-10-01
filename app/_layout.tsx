@@ -1,21 +1,17 @@
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { TokenCache } from "@clerk/clerk-expo/dist/cache";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Slot, Stack, useRouter, useSegments } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Provider } from "react-redux";
 import { extendedConfig } from "../extendedConfig";
 import { useLoadFonts } from "../hooks/useLoadFonts";
-import { initializeApp } from "firebase/app";
-import { auth, firebaseConfig } from "./firebase";
-import Colors from "../constants/Colors";
-import { StatusBar } from "expo-status-bar";
-import { Provider } from "react-redux";
 import { store } from "../redux/store";
-import { SafeAreaView } from "react-native";
-import { onAuthStateChanged } from "firebase/auth";
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+import Constants from "expo-constants";
+const CLERK_PUBLISHABLE_KEY =
+  "pk_test_cG9saXNoZWQtY2hpcG11bmstMzYuY2xlcmsuYWNjb3VudHMuZGV2JA";
 
 const InitialLayout = () => {
   const { isLoaded, isSignedIn } = useAuth();
@@ -27,11 +23,8 @@ const InitialLayout = () => {
       if (!isLoaded || !isFontLoaded) return;
       const isTabsGroup = segments[0] === "(tabs)";
       if (!isSignedIn) {
-        console.log("not signed");
         router.replace("/initial_screen");
       } else if (isSignedIn && !isTabsGroup) {
-        console.log("signed");
-
         router.replace("/(tabs)/main");
       }
     }

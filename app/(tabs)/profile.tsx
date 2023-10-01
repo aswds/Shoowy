@@ -44,7 +44,6 @@ export default function Profile() {
     for (const item of history) {
       if (item.preset.type === "Cold") {
         // Update maxColdGeneralTime for 'cold' type
-        console.log(item.preset.general_time);
         maxColdGeneralTime = Math.max(
           maxColdGeneralTime,
           item.preset.general_time

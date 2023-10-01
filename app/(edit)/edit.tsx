@@ -98,7 +98,7 @@ const Edit = () => {
                 onPress={async () => {
                   updateUsername();
                   if (image) await uploadImage();
-                  // router.back();
+                  router.back();
                 }}
               >
                 <CText fontFamily="M" color={Colors.accentColor}>

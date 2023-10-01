@@ -17,7 +17,6 @@ const ContrastTime = ({
 }) => {
   return (
     <Box justifyContent="center" gap={5}>
-      {console.log(coldTime, warmTime)}
       <CText fontFamily="B" color={Colors.cold} size="sm">
         Cold <SnowIcon size={20} />:{" "}
         <CText fontFamily="M" size="sm">
